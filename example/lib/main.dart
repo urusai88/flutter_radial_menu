@@ -9,8 +9,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
   @override
   void initState() {
     super.initState();
@@ -30,6 +28,7 @@ class _MyAppState extends State<MyApp> {
             Container(color: Colors.green, width: 50, height: 50),
             Container(color: Colors.blue, width: 50, height: 50),
             Container(color: Colors.black, width: 50, height: 50),
+            Container(color: Colors.purple, width: 50, height: 50),
           ]),
         ),
       ),

@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 
 class RadialMenu extends StatefulWidget {
@@ -44,15 +47,33 @@ class _RadialMenuMultiChildLayoutDelegate extends MultiChildLayoutDelegate {
     final constraints = BoxConstraints.loose(size);
     final center = size.center(Offset.zero);
 
+    final chunkRadius = 360 / length;
+
+    final maxRadius = math.min(size.width, size.height) / 2;
+    final radius = maxRadius;
+
+    var angle = 0.0 + -90.0;
+
     for (var i = 0; i < length; ++i) {
       if (hasChild(i)) {
         final s = layoutChild(i, constraints);
 
-        positionChild(i, center);
+        final radians = angle * (math.pi / 180);
+        final r = radius;
+
+        final p = center
+            .translate(r * math.cos(radians), r * math.sin(radians))
+            .translate(-(s.width / 2), -(s.height / 2));
+
+        positionChild(i, p);
+
+        angle += chunkRadius;
       }
     }
   }
 
   @override
-  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) => false;
+  bool shouldRelayout(MultiChildLayoutDelegate oldDelegate) =>
+      oldDelegate is! _RadialMenuMultiChildLayoutDelegate ||
+          (oldDelegate as _RadialMenuMultiChildLayoutDelegate).length != length;
 }
