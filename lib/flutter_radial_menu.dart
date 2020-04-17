@@ -17,8 +17,10 @@ class _RadialMenuState extends State<RadialMenu> {
   List<LayoutId> _children = [];
 
   @override
-  void initState() {
-    super.initState();
+  void didUpdateWidget(RadialMenu oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    _children.clear();
 
     for (var i = 0; i < widget.children.length; ++i) {
       _children.add(LayoutId(id: i, child: widget.children[i]));
@@ -40,7 +42,9 @@ class _RadialMenuState extends State<RadialMenu> {
 class _RadialMenuMultiChildLayoutDelegate extends MultiChildLayoutDelegate {
   final int length;
 
-  _RadialMenuMultiChildLayoutDelegate({@required this.length});
+  _RadialMenuMultiChildLayoutDelegate(
+      {@required this.length, Listenable relayout})
+      : super(relayout: relayout);
 
   @override
   void performLayout(Size size) {
@@ -59,7 +63,7 @@ class _RadialMenuMultiChildLayoutDelegate extends MultiChildLayoutDelegate {
         final s = layoutChild(i, constraints);
 
         final radians = angle * (math.pi / 180);
-        final r = radius;
+        final r = radius - s.width / 2;
 
         final p = center
             .translate(r * math.cos(radians), r * math.sin(radians))
